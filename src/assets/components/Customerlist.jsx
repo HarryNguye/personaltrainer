@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
+import AddCustomer from "./AddCustomer";
+
 //import EditCustomer from "./EditCustomer"; // Oletan, että sinulla on tämä komponentti
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
 function CustomerList() {
-  const [customers, setCustomers] = useState([]);
-
+  const [customer, setCustomer] = useState([]);
+  const [newCustomer, setNewCustomer] = useState({
+  });
 
 
   useEffect(() => {
-    fetchCustomers();
+    fetchCustomer();
   }, []);
+  
 
   const [columnDefs] = useState([
     { field: 'firstname', sortable: true, filter: true },
@@ -24,7 +28,7 @@ function CustomerList() {
     { field: 'phone', sortable: true, filter: true },
   ]);
 
-  const fetchCustomers = () => {
+  const fetchCustomer = () => {
     fetch('http://traineeapp.azurewebsites.net/api/customers')
     .then(response => {
       if (response.ok) {
@@ -35,7 +39,7 @@ function CustomerList() {
     })
     .then(data => {
       if (Array.isArray(data.content)) {
-        setCustomers(data.content);
+        setCustomer(data.content);
         console.log(data)
       } else {
         throw new Error("Haettu data ei ole taulukko");
@@ -51,7 +55,7 @@ function CustomerList() {
         .then(response => {
           if (response.ok) {
             // Päivittää asiakaslistan poiston jälkeen
-            fetchCustomers();
+            fetchCustomer();
           } else {
             throw new Error("Error in DELETE: " + response.statusText);
           }
@@ -61,12 +65,15 @@ function CustomerList() {
   };
 
   return (
+
     <div className="ag-theme-material" style={{ height: 500 }}>
-      <h2>Asiakaslista</h2>
+      <h2 style={{ color: 'white' }}>Customerlist</h2>
+      <AddCustomer fetchCustomer={fetchCustomer}/>
       <AgGridReact
         columnDefs={columnDefs}
-        rowData={customers}
+        rowData={customer}
         animateRows={true}>
+          
       </AgGridReact>
     </div>
   );

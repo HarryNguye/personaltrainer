@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container'; 
+import Stack from '@mui/material/Stack';
+
 // import EditTraining from "./EditTraining"; // Oletan, että sinulla on vastaava komponentti harjoituksille
 
 import "ag-grid-community/styles/ag-grid.css";
@@ -8,6 +11,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 
 function TrainingList() {
   const [trainings, setTrainings] = useState([]);
+  const [newTrainings, setNewTrainings] = useState([]);
 
   useEffect(() => {
     fetchTrainings(); // Tämä funktio lataa harjoitustiedot
@@ -19,20 +23,9 @@ function TrainingList() {
     { field: 'activity', sortable: true, filter: true },
     { field: 'customer', sortable: true, filter: true },
     
-    // Lisää harjoitusten tietoja tarvittaessa
-   /* {
-      cellRenderer: params => <EditTraining fetchTrainings={fetchTrainings} data={params.data} />,
-      width: 120
-    },
-    {
-      cellRenderer: params => 
-        <Button size="small" onClick={() => deleteTraining(params.data._links.training.href)}>
-          Delete
-        </Button>,
-      width: 120
-    }*/
-  ]);
 
+  ]);
+//Fetchaa treenit
   const fetchTrainings = () => {
     fetch("http://traineeapp.azurewebsites.net/api/trainings")
     .then(response => {
@@ -53,7 +46,7 @@ function TrainingList() {
     .catch(error => {
       console.error("Virhe:", error);
   })}
-
+  //poistaa treenin
   const deleteTraining = (url) => {
     if (window.confirm("Are you sure?")) {
       fetch(url, { method: 'DELETE' })
@@ -67,16 +60,19 @@ function TrainingList() {
     }
   };
 
-  return (
-    <div className="ag-theme-material" style={{ height: 500 }}>
-      <h2>Harjoituslista</h2>
-      <AgGridReact
-        columnDefs={columnDefs}
-        rowData={trainings}
-        animateRows={true}>
-      </AgGridReact>
-    </div>
-  );
-}
+
+
+    return (
+        <div className="ag-theme-material" style={{ height: 500 }}>
+          <h2 style={{ color: 'white' }}>Training</h2>
+          <AgGridReact
+            columnDefs={columnDefs}
+            rowData={trainings}
+            animateRows={true}>
+          </AgGridReact>
+        </div>
+      );
+    }
+
 
 export default TrainingList;
