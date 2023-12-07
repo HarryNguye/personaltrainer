@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
+import AddTrainings from "./AddTraining";
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container'; 
 import Stack from '@mui/material/Stack';
@@ -47,7 +48,7 @@ function TrainingList() {
       console.error("Virhe:", error);
   })}
   //poistaa treenin
-  const deleteTraining = (url) => {
+  const deleteTrainings = (url) => {
     if (window.confirm("Are you sure?")) {
       fetch(url, { method: 'DELETE' })
         .then(response => {
@@ -65,6 +66,7 @@ function TrainingList() {
     return (
         <div className="ag-theme-material" style={{ height: 500 }}>
           <h2 style={{ color: 'white' }}>Training</h2>
+          <AddTrainings fetchTrainings={fetchTrainings}/>
           <AgGridReact
             columnDefs={columnDefs}
             rowData={trainings}

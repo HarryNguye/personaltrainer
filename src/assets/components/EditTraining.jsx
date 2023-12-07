@@ -3,24 +3,28 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-// import TrainingDialog from './TrainingDialog'; // Oletan, että sinulla on tämä komponentti
+import CarDialog from './CarDialog';
 
-export default function EditTraining({ fetchTrainings, data }) {
-  const [training, setTraining] = useState({
-    date: '',
-    duration: '',
-    activity: '',
-    customer: ''
+export default function EditCar({ fetchCars, data }) {
+  const [car, setCar] = useState({
+    brand: '',
+    model: '',
+    fuel: '',
+    color: '',
+    year: '',
+    price: ''
   });
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
-    setTraining({
-      date: data.date,
-      duration: data.duration,
-      activity: data.activity,
-      customer: data.customer
+    setCar({
+      brand: data.brand,
+      model: data.model,
+      color: data.color,
+      fuel: data.fuel,
+      price: data.price,
+      year: data.year
     });
   };
 
@@ -28,17 +32,17 @@ export default function EditTraining({ fetchTrainings, data }) {
     setOpen(false);
   };
 
-  const saveTraining = () => {
-    fetch(data._links.training.href, {
+  const saveCar = () => {
+    fetch(data._links.car.href, {
       method: 'PUT',
       headers: { 'Content-type':'application/json' },
-      body: JSON.stringify(training) 
+      body: JSON.stringify(car) 
     })
     .then(response => {
       if (!response.ok)
-        throw new Error("Error when updating training: " + response.statusText);
+        throw new Error("Error when adding car: "  + response.statusText);
 
-      fetchTrainings();
+      fetchCars();
     })
     .catch(err => console.error(err));
 
@@ -46,7 +50,7 @@ export default function EditTraining({ fetchTrainings, data }) {
   }
 
   const handleChange = (e) => {
-    setTraining({...training, [e.target.name]: e.target.value});
+    setCar({...car, [e.target.name]: e.target.value});
   }
 
   return (
@@ -55,11 +59,11 @@ export default function EditTraining({ fetchTrainings, data }) {
         Edit
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Training</DialogTitle>
-        <TrainingDialog training={training} handleChange={handleChange} />
+        <DialogTitle>Edit Car</DialogTitle>
+        <CarDialog car={car} handleChange={handleChange} />
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={saveTraining}>Save</Button>
+          <Button onClick={saveCar}>Save</Button>
         </DialogActions>
       </Dialog>
     </div>
